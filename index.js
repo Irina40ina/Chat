@@ -1,25 +1,33 @@
 // Инициализация родительского узла и элемента, который меняем
 let head = document.querySelector('.head');
-let headTitle = document.querySelector('.head__title')
+let headTitle = document.querySelector('.head__title');
+
 // Создаю функцию
 function replaceTitle(content) {
-//Создаю новый элемент 
-let newTitle = document.createElement('h1');
-newTitle.innerHTML = content;
-// Накидываю стили на новый заголовок
-newTitle.classList.add('head__title');
-// Функция замены
-head.replaceChild(newTitle, headTitle);
+    //Создаю новый элемент 
+    let newTitle = document.createElement('h1');
+    newTitle.innerHTML = content;
+    // Накидываю стили на новый заголовок
+    newTitle.classList.add('head__title');
+    // Функция замены
+    head.replaceChild(newTitle, headTitle);
 }
+
 // Вызов функции
 replaceTitle('Чат поддержки для IT');
 
-
+// Шаблон обекта сообщения
+const messageData = {
+    id: null, 
+    content: null,
+    fromId: null
+}
 
 
 // Получть wrapperContainer чтобы монтировать в него messageContainer
 let wraperMessage = document.querySelector('.wraper__message');
 
+// Создание сообщения (ПРЕДСТАВЛЕНИЕ)
 function createMessage(content) {
     // 1) Создать messageContainer
     let messageContainer = document.createElement('div');
@@ -39,18 +47,29 @@ function createMessage(content) {
     wraperMessage.appendChild(messageContainer);
 }
 
-
+// Заполнение объекта нового сообщения
+function filledMessageData(id, content, fromId) {
+    messageData.id = id;
+    messageData.content = content;
+    messageData.fromId = fromId;
+}
+const myId = 33566;
 let message = '';
-let messageInput = document.querySelector ('.message__input');
+let messageInput = document.querySelector('.message__input');
 messageInput.addEventListener('input', (event) => {
     message = event.target.value;
-})
+});
+
 
 const btnSend = document.querySelector('.btn__send');
 btnSend.addEventListener('click', () => {
     if (message !== '') {
-    createMessage(message);
-    messageInput.value = '';} 
+        filledMessageData(Date.now(), message, myId);
+        createMessageDB(messageData);
+        createMessage(message);
+        messageInput.value = '';
+        message = '';
+    }
     else {
         console.log("Сообщение пустое");
     }
@@ -59,7 +78,7 @@ btnSend.addEventListener('click', () => {
 // Сообщение отправляется при нажатии на Enter
 document.addEventListener('keydown', enterSend);
 function enterSend(event) {
-    if (event.key == "Enter"){
+    if (event.key == "Enter") {
         createMessage(message);
         messageInput.value = '';
     }
