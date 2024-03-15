@@ -56,3 +56,12 @@ btnSend.addEventListener('click', () => {
     }
 })
 
+// Сообщение отправляется при нажатии на Enter
+document.addEventListener('keydown', enterSend);
+function enterSend(event) {
+    if (event.key == "Enter"){
+        createMessage(message);
+        messageInput.value = '';
+    }
+}
+
