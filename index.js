@@ -2,6 +2,21 @@
 let head = document.querySelector('.head');
 let headTitle = document.querySelector('.head__title');
 
+
+// ==========================   Mouse Move   ===============================
+document.addEventListener('mousemove', (event) => {
+    document.body.style.cssText += `--screen-x: ${event.pageX}px`;
+    document.body.style.cssText += `--screen-y: ${event.pageY}px`;
+});
+
+document.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+    const contextMenu = document.querySelector('.context-menu');
+    contextMenu.style.display = 'block';
+    contextMenu.style.top = '300px';
+    contextMenu.style.left = '300px';
+});
+
 // Создаю функцию
 function replaceTitle(content) {
     //Создаю новый элемент 
@@ -28,7 +43,7 @@ const messageData = {
 let wraperMessage = document.querySelector('.wraper__message');
 
 // Создание сообщения (ПРЕДСТАВЛЕНИЕ)
-function createMessageView(content) {
+function createMessageView(content, id) {
     // 1) Создать messageContainer
     let messageContainer = document.createElement('div');
     messageContainer.classList.add('message_container');
@@ -40,10 +55,13 @@ function createMessageView(content) {
     // 3) Добавление текста в сообщение
     message.innerHTML = content;
 
-    // 4) Добавить в messageContainer message
+    // 4) Добавление ID для сообщения
+    message.id = id;
+
+    // 5) Добавить в messageContainer message
     messageContainer.appendChild(message);
 
-    // 5) Монтируем контейнер сообщения в wrapperMessage
+    // 6) Монтируем контейнер сообщения в wrapperMessage
     wraperMessage.appendChild(messageContainer);
 }
 
@@ -77,7 +95,7 @@ btnSend.addEventListener('click', () => {
     if (message !== '') {
         filledMessageData(Date.now(), message, myId);
         createMessageDB(messageData);
-        createMessageView(message);
+        createMessageView(message, messageData.id);
         messageInput.value = '';
         message = '';
         messageData.content = null;

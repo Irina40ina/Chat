@@ -16,11 +16,15 @@ function createMessageDB(messageData) {
 
 // =================================   READ   ==================================
 function getMessages() {
-    const fetchedMes = JSON.parse(localStorage.getItem('messages'));
+    let fetchedMes = JSON.parse(localStorage.getItem('messages'));
+    if(fetchedMes === null) {
+        fetchedMes = [];
+    } 
     return fetchedMes;
 }
 
 // =================================   UPDATE   ==================================
+
 
 
 // =================================   DELETE   ==================================

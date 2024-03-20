@@ -60,6 +60,17 @@
     overflow: auto;
 }
 
+.context-menu {
+    display: none;
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 200px;
+    height: 300px;
+    background-color: white;
+    z-index: 5;
+}
+
 /* Обертка для сообщений */
 .wraper__message {
     min-height: 100%;
