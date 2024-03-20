@@ -2,19 +2,23 @@
 let head = document.querySelector('.head');
 let headTitle = document.querySelector('.head__title');
 
+// ТУТ Я РЕШИЛ ПРОБЛЕМУ
+let screenX = 0;
+let screenY = 0;
 
 // ==========================   Mouse Move   ===============================
 document.addEventListener('mousemove', (event) => {
-    document.body.style.cssText += `--screen-x: ${event.pageX}px`;
-    document.body.style.cssText += `--screen-y: ${event.pageY}px`;
+    screenX = event.pageX;
+    screenY = event.pageY;
 });
 
 document.addEventListener('contextmenu', (event) => {
     event.preventDefault();
     const contextMenu = document.querySelector('.context-menu');
     contextMenu.style.display = 'block';
-    contextMenu.style.top = '300px';
-    contextMenu.style.left = '300px';
+    // ТУТ Я РЕШИЛ ПРОБЛЕМУ
+    contextMenu.style.top = `${screenY}px`;
+    contextMenu.style.left = `${screenX}px`;
 });
 
 // Создаю функцию
