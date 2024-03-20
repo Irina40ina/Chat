@@ -18,7 +18,7 @@ replaceTitle('Чат поддержки для IT');
 
 // Шаблон обекта сообщения
 const messageData = {
-    id: null, 
+    id: null,
     content: null,
     fromId: null
 }
@@ -28,7 +28,7 @@ const messageData = {
 let wraperMessage = document.querySelector('.wraper__message');
 
 // Создание сообщения (ПРЕДСТАВЛЕНИЕ)
-function createMessage(content) {
+function createMessageView(content) {
     // 1) Создать messageContainer
     let messageContainer = document.createElement('div');
     messageContainer.classList.add('message_container');
@@ -47,12 +47,23 @@ function createMessage(content) {
     wraperMessage.appendChild(messageContainer);
 }
 
+function mountedMessages() {
+    let featchedArray = getMessages();
+    for(let i=0; i < featchedArray.length; i++) {
+        let currentMessage = featchedArray[i];
+        createMessageView(currentMessage.content);
+    } 
+    
+}
+mountedMessages();
+
 // Заполнение объекта нового сообщения
 function filledMessageData(id, content, fromId) {
     messageData.id = id;
     messageData.content = content;
     messageData.fromId = fromId;
 }
+
 const myId = 33566;
 let message = '';
 let messageInput = document.querySelector('.message__input');
@@ -60,27 +71,41 @@ messageInput.addEventListener('input', (event) => {
     message = event.target.value;
 });
 
-
+// Инициирует создание нового сообщения
 const btnSend = document.querySelector('.btn__send');
 btnSend.addEventListener('click', () => {
     if (message !== '') {
         filledMessageData(Date.now(), message, myId);
         createMessageDB(messageData);
-        createMessage(message);
+        createMessageView(message);
         messageInput.value = '';
         message = '';
+        messageData.content = null;
+        messageData.fromId = null;
+        messageData.id = null;
     }
     else {
         console.log("Сообщение пустое");
     }
-})
+});
 
 // Сообщение отправляется при нажатии на Enter
 document.addEventListener('keydown', enterSend);
 function enterSend(event) {
     if (event.key == "Enter") {
-        createMessage(message);
-        messageInput.value = '';
+        if (message !== '') {
+            filledMessageData(Date.now(), message, myId);
+            createMessageDB(messageData);
+            createMessageView(message);
+            messageInput.value = '';
+            message = '';
+            messageData.content = null;
+            messageData.fromId = null;
+            messageData.id = null;
+        }
+        else {
+            console.log("Сообщение пустое");
+        }
     }
 }
 
