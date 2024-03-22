@@ -12,15 +12,6 @@ document.addEventListener('mousemove', (event) => {
     screenY = event.pageY;
 });
 
-document.addEventListener('contextmenu', (event) => {
-    event.preventDefault();
-    const contextMenu = document.querySelector('.context-menu');
-    contextMenu.style.display = 'block';
-    // ТУТ Я РЕШИЛ ПРОБЛЕМУ
-    contextMenu.style.top = `${screenY}px`;
-    contextMenu.style.left = `${screenX}px`;
-});
-
 // Создаю функцию
 function replaceTitle(content) {
     //Создаю новый элемент 
@@ -41,7 +32,6 @@ const messageData = {
     content: null,
     fromId: null
 }
-
 
 // Получть wrapperContainer чтобы монтировать в него messageContainer
 let wraperMessage = document.querySelector('.wraper__message');
@@ -73,9 +63,17 @@ function mountedMessages() {
     let featchedArray = getMessages();
     for(let i=0; i < featchedArray.length; i++) {
         let currentMessage = featchedArray[i];
-        createMessageView(currentMessage.content);
-    } 
-    
+        createMessageView(currentMessage.content, currentMessage.id);
+        const message = document.getElementById(currentMessage.id + '');
+        message.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            const contextMenu = document.querySelector('.context-menu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.top = screenY + 'px';
+            contextMenu.style.left = screenX + 'px';  
+            let newMes = document.getElementById(event.target.id);
+        });
+    }
 }
 mountedMessages();
 

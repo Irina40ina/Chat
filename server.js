@@ -4,7 +4,7 @@
 // =================================   CREATE   ==================================
 function createMessageDB(messageData) {
     const messages = JSON.parse(localStorage.getItem('messages'));
-    if(messages) {
+    if(Array.isArray(messages)) {
         messages.push(messageData);
         localStorage.setItem('messages', JSON.stringify(messages));
     } else {
