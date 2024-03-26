@@ -60,6 +60,14 @@
     overflow: auto;
 }
 
+.edit-title {
+    width: 400px;
+    height: 20px;
+    position: absolute;
+    top: 80%;
+    background-color: var(--message-color);
+    display: none;
+}
 .context-menu {
     display: none;
     position: fixed;
@@ -69,6 +77,11 @@
     height: 300px;
     background-color: white;
     z-index: 5;
+}
+
+.context-menu__btn {
+    width: 100%;
+    background-color: gray;
 }
 
 /* Обертка для сообщений */
