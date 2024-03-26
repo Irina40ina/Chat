@@ -1,17 +1,32 @@
+
+// ==========================   DATA   ===============================
 // Инициализация родительского узла и элемента, который меняем
 let head = document.querySelector(".head");
 let headTitle = document.querySelector(".head__title");
-
-// ТУТ Я РЕШИЛ ПРОБЛЕМУ
+// Получть wrapperContainer чтобы монтировать в него messageContainer
+let wraperMessage = document.querySelector(".wraper__message");
+let messageInput = document.querySelector(".message__input");
+const btnSend = document.querySelector(".btn__send");
+const editBtn = document.querySelector(".context-menu__btn");
+const editTitle = document.querySelector('.edit-title');
 let screenX = 0;
 let screenY = 0;
+let mode = "default";
+let messageId = null;
+// Шаблон обекта сообщения
+const messageData = {
+  id: null,
+  content: null,
+  fromId: null,
+};
+const myId = 33566;
+let message = "";
 
-// ==========================   Mouse Move   ===============================
-document.addEventListener("mousemove", (event) => {
-  screenX = event.pageX;
-  screenY = event.pageY;
-});
+// =====================================================================
 
+
+
+// ==========================   METHODS   ===============================
 // Создаю функцию
 function replaceTitle(content) {
   //Создаю новый элемент
@@ -22,19 +37,6 @@ function replaceTitle(content) {
   // Функция замены
   head.replaceChild(newTitle, headTitle);
 }
-
-// Вызов функции
-replaceTitle("Чат поддержки для IT");
-
-// Шаблон обекта сообщения
-const messageData = {
-  id: null,
-  content: null,
-  fromId: null,
-};
-
-// Получть wrapperContainer чтобы монтировать в него messageContainer
-let wraperMessage = document.querySelector(".wraper__message");
 
 // Создание сообщения (ПРЕДСТАВЛЕНИЕ)
 function createMessageView(content, id) {
@@ -59,7 +61,12 @@ function createMessageView(content, id) {
   wraperMessage.appendChild(messageContainer);
 }
 
-let mode = "default";
+function setPositionContextMenu() {
+  const contextMenu = document.querySelector(".context-menu");
+  contextMenu.style.display = "block";
+  contextMenu.style.top = screenY + "px";
+  contextMenu.style.left = screenX + "px";
+}
 
 function mountedMessages() {
   let featchedArray = getMessages();
@@ -70,29 +77,20 @@ function mountedMessages() {
     const presentMessages = document.getElementById(currentMessage.id + "");
     presentMessages.addEventListener("contextmenu", (event) => {
       event.preventDefault();
-      const contextMenu = document.querySelector(".context-menu");
-      contextMenu.style.display = "block";
-      contextMenu.style.top = screenY + "px";
-      contextMenu.style.left = screenX + "px";
-      let presentMessage = document.getElementById(event.target.id);
-      console.log(presentMessage);
+      setPositionContextMenu();
+      let selectedMessage = document.getElementById(event.target.id);
 
       messageId = event.target.id;
-      // console.log(messageId);
 
-      const contextMenuBtn = document.querySelector(".context-menu__btn");
-      contextMenuBtn.addEventListener("click", (event) => {
-        messageInput.value = presentMessage.innerHTML;
-        const editTitle = document.querySelector('.edit-title');
+      editBtn.addEventListener("click", () => {
+        mode = "edit";
+        document.querySelector(".context-menu").style.display = "none";
+        messageInput.value = selectedMessage.innerHTML;
         editTitle.style.display = 'block';
       });
-
     });
   }
-  let mode = "edit";
 }
-
-mountedMessages();
 
 // Заполнение объекта нового сообщения
 function filledMessageData(id, content, fromId) {
@@ -101,51 +99,60 @@ function filledMessageData(id, content, fromId) {
   messageData.fromId = fromId;
 }
 
-const myId = 33566;
-let message = "";
-let messageInput = document.querySelector(".message__input");
+function handlerDefaultMode() {
+  if (message !== "") {
+    filledMessageData(Date.now(), message, myId);
+    createMessageDB(messageData);
+    createMessageView(message, messageData.id);
+    messageInput.value = "";
+    message = "";
+    messageData.content = null;
+    messageData.fromId = null;
+    messageData.id = null;
+  } else {
+    console.log("Сообщение пустое");
+  }
+}
+
+function handlerEditMode() {
+  if (message == "") {
+    return;
+  }
+  updateMessage(messageId, message);
+  let newMes = document.getElementById(messageId);
+  newMes.textContent = message;
+  mode = "default";
+  messageInput.value = "";
+  message = '';
+  editTitle.style.display = 'none';
+}
+
+// =====================================================================
+
+
+// ==========================   MOUNTED   ===============================
+document.addEventListener("mousemove", (event) => {
+  screenX = event.pageX;
+  screenY = event.pageY;
+});
 messageInput.addEventListener("input", (event) => {
   message = event.target.value;
 });
 
-// Инициирует создание нового сообщения
-const btnSend = document.querySelector(".btn__send");
-const btnEdit = document.querySelector(".context-menu__btn");
-
-console.log(btnSend);
-
-let messageId = null;
-
-btnEdit.addEventListener("click", () => {
-  mode = "edit";
-  document.querySelector(".context-menu").style.display = "none";
-});
-
 btnSend.addEventListener("click", () => {
-  console.log(mode);
-  if (mode === "default") {
-    if (message !== "") {
-      filledMessageData(Date.now(), message, myId);
-      createMessageDB(messageData);
-      createMessageView(message, messageData.id);
-      messageInput.value = "";
-      message = "";
-      messageData.content = null;
-      messageData.fromId = null;
-      messageData.id = null;
-    } else {
-      console.log("Сообщение пустое");
-    }
+  if (mode === 'default') {
+    handlerDefaultMode();
   } else if (mode === "edit") {
-    if (message == "") {
-      return;
-    }
-
-    let newMes = document.getElementById(messageId);
-    newMes.textContent = message;
-    mode = "default";
+    handlerEditMode();
   }
 });
+
+replaceTitle("Чат поддержки для IT");
+mountedMessages();
+
+// =====================================================================
+
+
 
 // Сообщение отправляется при нажатии на Enter
 // document.addEventListener("keydown", enterSend);
@@ -164,4 +171,4 @@ btnSend.addEventListener("click", () => {
 //       console.log("Сообщение пустое");
 //     }
 //   }
-// }    
+// }   
