@@ -8,7 +8,11 @@ let wraperMessage = document.querySelector(".wraper__message");
 let messageInput = document.querySelector(".message__input");
 const btnSend = document.querySelector(".btn__send");
 const editBtn = document.querySelector(".context-menu__btn");
+const deleteBtn = document.querySelector('.context-menu_delete__btn');
 const editTitle = document.querySelector('.edit-title');
+const deleteWindow = document.querySelector('.delete-window');
+const deleteBtnYes = document.querySelector('.delete-window__yes');
+const deleteBtnNo = document.querySelector('.delete-window__no');
 let screenX = 0;
 let screenY = 0;
 let mode = "default";
@@ -75,12 +79,21 @@ function mountedMessages() {
     createMessageView(currentMessage.content, currentMessage.id);
 
     const presentMessages = document.getElementById(currentMessage.id + "");
+    
     presentMessages.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       setPositionContextMenu();
       let selectedMessage = document.getElementById(event.target.id);
 
       messageId = event.target.id;
+
+      deleteBtnYes.addEventListener('click', () => {
+        deleteMessage(messageId);
+        selectedMessage.remove();
+        deleteWindow.style.display = 'none';
+        messageInput.value = "";
+        message = '';
+      });
 
       editBtn.addEventListener("click", () => {
         mode = "edit";
@@ -99,11 +112,14 @@ function filledMessageData(id, content, fromId) {
   messageData.fromId = fromId;
 }
 
+
+
 function handlerDefaultMode() {
   if (message !== "") {
     filledMessageData(Date.now(), message, myId);
     createMessageDB(messageData);
     createMessageView(message, messageData.id);
+    console.log(messageData);
     messageInput.value = "";
     message = "";
     messageData.content = null;
@@ -118,7 +134,9 @@ function handlerEditMode() {
   if (message == "") {
     return;
   }
-  updateMessage(messageId, message);
+  // updateMessage(messageId, message); 1-й способ
+  filledMessageData(messageId, message, myId);
+  updateMessage(messageId, messageData);
   let newMes = document.getElementById(messageId);
   newMes.textContent = message;
   mode = "default";
@@ -126,7 +144,6 @@ function handlerEditMode() {
   message = '';
   editTitle.style.display = 'none';
 }
-
 // =====================================================================
 
 
@@ -137,6 +154,7 @@ document.addEventListener("mousemove", (event) => {
 });
 messageInput.addEventListener("input", (event) => {
   message = event.target.value;
+  // console.log(event);
 });
 
 btnSend.addEventListener("click", () => {
@@ -147,8 +165,20 @@ btnSend.addEventListener("click", () => {
   }
 });
 
+deleteBtn.addEventListener('click', () => {
+  deleteWindow.style.display = 'flex';
+  document.querySelector(".context-menu").style.display = "none";
+});
+
+deleteBtnNo.addEventListener('click', () => {
+  deleteWindow.style.display = 'none';
+});
+
+
+
 replaceTitle("Чат поддержки для IT");
 mountedMessages();
+
 
 // =====================================================================
 

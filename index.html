@@ -23,20 +23,31 @@
                     <button class="context-menu__btn">
                         Редактировать
                     </button>
+                    <button class="context-menu_delete__btn">
+                        Удалить
+                    </button>
                 </nav>
                 <div class="wraper__message">
                     <!-- Здесь будут располагаться сообщения  -->
                 </div>
-                <div class="edit-title"><p>Редактирование</p></div>
+                <div class="edit-title">
+                    <p>Редактирование</p>
+                </div>
+                
             </div>
-
+            
             <!-- Панель ввода сообщений -->
             <div class="input-panel">
                 <textarea class="message__input" type="text" placeholder="Введите сообщение"></textarea>
                 <button class="btn__send">Отправить</button>
             </div>
+            <div class="delete-window">
+                <p class="delete-window__title">Вы хотите удалить сообщение?</p>
+                <button class="delete-window__yes">Да</button>
+                <button class="delete-window__no">Нет</button>
+            </div>
         </div>
-
+        
     </div>
     <script src="./server.js"></script>
     <script src="./index.js"></script>

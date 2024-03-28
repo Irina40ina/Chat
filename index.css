@@ -84,6 +84,44 @@
     background-color: gray;
 }
 
+.context-menu_delete__btn {
+    width: 100%;
+    background-color: gray;
+}
+
+.delete-window {
+    display: none;
+    position: absolute;
+    /* display: flex; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 250px;
+    background-color: #393232;
+    z-index: 6;
+    box-shadow: -5px 6px 7px 4px #181515;
+    border-radius: 15px;
+}
+
+.delete-window__title {
+    color: #cca2a2;
+    font-family: var(--font);
+    text-align: center;
+}
+
+.delete-window__yes {
+    width: 50%;
+    background-color: #cca2a2;
+    color: #262b33;
+}
+
+.delete-window__no {
+    width: 50%;
+    background-color: #8D6262;
+    color: #262b33;
+}
+
 /* Обертка для сообщений */
 .wraper__message {
     min-height: 100%;
