@@ -24,20 +24,34 @@ function getMessages() {
 }
 
 // =================================   UPDATE   ==================================
-function updateMessage(id, content) {
+// function updateMessage(id, content) {
+//     let fetchedMes = getMessages();
+//     // 1-ый Способ
+//     fetchedMes = fetchedMes.map((element) => {
+//         if (element.id == id) {
+//             element.content = content;
+//             return element;
+//         }
+//         return element;
+//     });
+//     localStorage.setItem('messages', JSON.stringify(fetchedMes));
+// }
+// 2-ой Способ
+function updateMessage(id, object) {
     let fetchedMes = getMessages();
-    // 1-ый Способ
-    fetchedMes = fetchedMes.map((element) => {
-        if (element.id == id) {
-            element.content = content;
-            return element;
-        }
-        return element;
-    });
+    let selectedMesIndex = fetchedMes.findIndex(element => element.id == id);
+    fetchedMes.splice(selectedMesIndex, 1, object);
     localStorage.setItem('messages', JSON.stringify(fetchedMes));
-
-    // 2-ой Способ
 }
+
+function deleteMessage(id) {
+    let fetchedMes = getMessages();
+    let selectedMesIndex = fetchedMes.findIndex(element => element.id == id);
+    fetchedMes.splice(selectedMesIndex, 1);
+    localStorage.setItem('messages', JSON.stringify(fetchedMes));
+}
+
+
 
 // =================================   DELETE   ==================================
 
