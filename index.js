@@ -1,7 +1,7 @@
 
 // ==========================   DATA   ===============================
 // Инициализация родительского узла и элемента, который меняем
-let head = document.querySelector(".head");
+let head = document.querySelector(".head_title__box");
 let headTitle = document.querySelector(".head__title");
 // Получть wrapperContainer чтобы монтировать в него messageContainer
 let wraperMessage = document.querySelector(".wraper__message");
@@ -13,6 +13,9 @@ const editTitle = document.querySelector('.edit-title');
 const deleteWindow = document.querySelector('.delete-window');
 const deleteBtnYes = document.querySelector('.delete-window__yes');
 const deleteBtnNo = document.querySelector('.delete-window__no');
+const searchBtn = document.querySelector('.search-btn');
+const searchInputPanel = document.querySelector('.search__input-panel');
+let filterArray = getMessages();
 let screenX = 0;
 let screenY = 0;
 let mode = "default";
@@ -23,6 +26,8 @@ const messageData = {
   content: null,
   fromId: null,
 };
+let searchMessageInput = document.querySelector('.search__message-input');
+// console.log(textSearch);
 const myId = 33566;
 let message = "";
 
@@ -76,6 +81,7 @@ function mountedMessages() {
   let featchedArray = getMessages();
   for (let i = 0; i < featchedArray.length; i++) {
     let currentMessage = featchedArray[i];
+
     createMessageView(currentMessage.content, currentMessage.id);
 
     const presentMessages = document.getElementById(currentMessage.id + "");
@@ -104,6 +110,28 @@ function mountedMessages() {
     });
   }
 }
+
+function filterItems(word, array) {
+  return array.filter(message => {
+    const regex = new RegExp(word, 'gi');
+    return message.content.match(regex);
+  })
+}
+
+searchMessageInput.addEventListener("input", (event) => {
+  let messageForSearch = event.target.value;
+  
+  function displaySearchingMessages() {
+    let searchingArray = filterItems(messageForSearch, filterArray);
+    for (let i = 0; i < searchingArray.length; i++) {
+      let searchingMassegesView = searchingArray[i];
+  
+      createMessageView(searchingMassegesView.content, searchingMassegesView.id);
+    };
+  };
+  displaySearchingMessages();
+});
+
 
 // Заполнение объекта нового сообщения
 function filledMessageData(id, content, fromId) {
@@ -154,8 +182,16 @@ document.addEventListener("mousemove", (event) => {
 });
 messageInput.addEventListener("input", (event) => {
   message = event.target.value;
-  // console.log(event);
 });
+
+
+searchMessageInput.addEventListener("input", (event) => {
+  let messageForSearch = event.target.value;});
+
+
+  // searchMessageInput.addEventListener('change', displaySearchingMessages);
+  // searchMessageInput.addEventListener('keyup', displaySearchingMessages);
+
 
 btnSend.addEventListener("click", () => {
   if (mode === 'default') {
@@ -172,6 +208,10 @@ deleteBtn.addEventListener('click', () => {
 
 deleteBtnNo.addEventListener('click', () => {
   deleteWindow.style.display = 'none';
+});
+
+searchBtn.addEventListener('click', () => {
+  searchInputPanel.style.display = 'block';
 });
 
 
@@ -201,4 +241,3 @@ mountedMessages();
 //       console.log("Сообщение пустое");
 //     }
 //   }
-// }   
