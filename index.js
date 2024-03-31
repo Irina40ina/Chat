@@ -16,6 +16,8 @@ const deleteBtnNo = document.querySelector('.delete-window__no');
 const searchBtn = document.querySelector('.search-btn');
 const searchInputPanel = document.querySelector('.search__input-panel');
 let filterArray = getMessages();
+let presentMessages = {};
+let selectedMessage = {};
 let screenX = 0;
 let screenY = 0;
 let mode = "default";
@@ -31,6 +33,7 @@ let searchMessageInput = document.querySelector('.search__message-input');
 // console.log(textSearch);
 const myId = 33566;
 let message = "";
+let messageForSearch = '';
 
 // =====================================================================
 
@@ -85,50 +88,29 @@ function filterItems(word, array) {
   })
 }
 
-searchMessageInput.addEventListener("input", (event) => {
-  let messageForSearch = event.target.value;
-  inputMode = 'correct';
   function displaySearchingMessages() {
+
     let searchingArray = filterItems(messageForSearch, filterArray);
     for (let i = 0; i < searchingArray.length; i++) {
       let searchingMassegesView = searchingArray[i];
-  
       createMessageView(searchingMassegesView.content, searchingMassegesView.id);
     };
   };
-  displaySearchingMessages();
-});
+
 
 function mountedMessages() {
   let featchedArray = getMessages();
   for (let i = 0; i < featchedArray.length; i++) {
     let currentMessage = featchedArray[i];
-
     createMessageView(currentMessage.content, currentMessage.id);
-
-    const presentMessages = document.getElementById(currentMessage.id + "");
+    presentMessages = document.getElementById(currentMessage.id + "");
+    
     
     presentMessages.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       setPositionContextMenu();
-      let selectedMessage = document.getElementById(event.target.id);
-
+      selectedMessage = document.getElementById(event.target.id);
       messageId = event.target.id;
-
-      deleteBtnYes.addEventListener('click', () => {
-        deleteMessage(messageId);
-        selectedMessage.remove();
-        deleteWindow.style.display = 'none';
-        messageInput.value = "";
-        message = '';
-      });
-
-      editBtn.addEventListener("click", () => {
-        mode = "edit";
-        document.querySelector(".context-menu").style.display = "none";
-        messageInput.value = selectedMessage.innerHTML;
-        editTitle.style.display = 'block';
-      });
     });
   }
 }
@@ -186,12 +168,22 @@ messageInput.addEventListener("input", (event) => {
 
 
 searchMessageInput.addEventListener("input", (event) => {
-  let messageForSearch = event.target.value;});
+  messageForSearch = event.target.value;
+  if(inputMode === 'create'){
+  mountedMessages();
+} else if(inputMode === 'correct'){
+  // -------------------------??????????
+  presentMessages.style.display = 'none';
+  displaySearchingMessages();
+}
+});
 
-
-  // searchMessageInput.addEventListener('change', displaySearchingMessages);
-  // searchMessageInput.addEventListener('keyup', displaySearchingMessages);
-
+  editBtn.addEventListener("click", () => {
+    mode = "edit";
+    document.querySelector(".context-menu").style.display = "none";
+    messageInput.value = selectedMessage.innerHTML;
+    editTitle.style.display = 'block';
+  });
 
 btnSend.addEventListener("click", () => {
   if (mode === 'default') {
@@ -200,19 +192,19 @@ btnSend.addEventListener("click", () => {
     handlerEditMode();
   }
 });
-
-// -------------------------??????????
-
-if(inputMode === 'create'){
-  mountedMessages();
-} else if(inputMode === 'correct'){
-  displaySearchingMessages();
-}
-
 deleteBtn.addEventListener('click', () => {
   deleteWindow.style.display = 'flex';
   document.querySelector(".context-menu").style.display = "none";
 });
+
+deleteBtnYes.addEventListener('click', () => {
+  deleteMessage(messageId);
+  selectedMessage.remove();
+  deleteWindow.style.display = 'none';
+  messageInput.value = "";
+  message = '';
+});
+
 
 deleteBtnNo.addEventListener('click', () => {
   deleteWindow.style.display = 'none';
@@ -220,6 +212,7 @@ deleteBtnNo.addEventListener('click', () => {
 
 searchBtn.addEventListener('click', () => {
   searchInputPanel.style.display = 'block';
+  inputMode = 'correct';
 });
 
 
