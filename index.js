@@ -19,6 +19,7 @@ let filterArray = getMessages();
 let screenX = 0;
 let screenY = 0;
 let mode = "default";
+let inputMode = 'create';
 let messageId = null;
 // Шаблон обекта сообщения
 const messageData = {
@@ -77,6 +78,27 @@ function setPositionContextMenu() {
   contextMenu.style.left = screenX + "px";
 }
 
+function filterItems(word, array) {
+  return array.filter(message => {
+    const regex = new RegExp(word, 'gi');
+    return message.content.match(regex);
+  })
+}
+
+searchMessageInput.addEventListener("input", (event) => {
+  let messageForSearch = event.target.value;
+  inputMode = 'correct';
+  function displaySearchingMessages() {
+    let searchingArray = filterItems(messageForSearch, filterArray);
+    for (let i = 0; i < searchingArray.length; i++) {
+      let searchingMassegesView = searchingArray[i];
+  
+      createMessageView(searchingMassegesView.content, searchingMassegesView.id);
+    };
+  };
+  displaySearchingMessages();
+});
+
 function mountedMessages() {
   let featchedArray = getMessages();
   for (let i = 0; i < featchedArray.length; i++) {
@@ -110,28 +132,6 @@ function mountedMessages() {
     });
   }
 }
-
-function filterItems(word, array) {
-  return array.filter(message => {
-    const regex = new RegExp(word, 'gi');
-    return message.content.match(regex);
-  })
-}
-
-searchMessageInput.addEventListener("input", (event) => {
-  let messageForSearch = event.target.value;
-  
-  function displaySearchingMessages() {
-    let searchingArray = filterItems(messageForSearch, filterArray);
-    for (let i = 0; i < searchingArray.length; i++) {
-      let searchingMassegesView = searchingArray[i];
-  
-      createMessageView(searchingMassegesView.content, searchingMassegesView.id);
-    };
-  };
-  displaySearchingMessages();
-});
-
 
 // Заполнение объекта нового сообщения
 function filledMessageData(id, content, fromId) {
@@ -200,6 +200,14 @@ btnSend.addEventListener("click", () => {
     handlerEditMode();
   }
 });
+
+// -------------------------??????????
+
+if(inputMode === 'create'){
+  mountedMessages();
+} else if(inputMode === 'correct'){
+  displaySearchingMessages();
+}
 
 deleteBtn.addEventListener('click', () => {
   deleteWindow.style.display = 'flex';

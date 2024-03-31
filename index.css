@@ -34,7 +34,7 @@
     border-radius: 10px;
 }
 
-.seach__input-panel {
+.search__input-panel {
     display: none;
     position: absolute;
     top: 5px;
@@ -44,7 +44,7 @@
     border: 1px solid #141010;
 }
 
-.seach__message-input {
+.search__message-input {
     width: 100%;
     height: 100%;
     resize: none;
@@ -72,7 +72,7 @@
     margin-left: 100px;
 }
 
-.seach-btn {
+.search-btn {
     background: url('./magnifying-glass-solid.svg') no-repeat;
     width: 30px;
     height: 30px;
