@@ -15,7 +15,8 @@ const deleteBtnYes = document.querySelector('.delete-window__yes');
 const deleteBtnNo = document.querySelector('.delete-window__no');
 const searchBtn = document.querySelector('.search-btn');
 const searchInputPanel = document.querySelector('.search__input-panel');
-let filterArray = getMessages();
+let mainArray = [];
+let filteredArray = [];
 let presentMessages = {};
 let selectedMessage = {};
 let screenX = 0;
@@ -81,24 +82,33 @@ function setPositionContextMenu() {
   contextMenu.style.left = screenX + "px";
 }
 
+// ==============   НУЖНО РЕШИТЬ   ===================== 
 function filterItems(word, array) {
-  return array.filter(message => {
-    const regex = new RegExp(word, 'gi');
-    return message.content.match(regex);
-  })
-}
-
-  function displaySearchingMessages() {
-
-    let searchingArray = filterItems(messageForSearch, filterArray);
-    for (let i = 0; i < searchingArray.length; i++) {
-      let searchingMassegesView = searchingArray[i];
-      createMessageView(searchingMassegesView.content, searchingMassegesView.id);
+  array.forEach(message => {
+    const NotMathcingElement = document.getElementById(`${message.id}`);
+    if(NotMathcingElement){
+      NotMathcingElement.parentElement.remove();
     };
+    if(message.content.toLowerCase().includes(word.toLowerCase())) {
+      filteredArray.push(message);
+    }
+  });
+  filteredArray.forEach((message) => {
+    createMessageView(message.content, message.id);
+  });
+};
+
+function displaySearchingMessages() {
+  let searchingArray = filterItems(messageForSearch, mainArray);
+  for (let i = 0; i < searchingArray.length; i++) {
+    let searchingMassegesView = searchingArray[i];
+    createMessageView(searchingMassegesView.content, searchingMassegesView.id);
   };
+};
 
 
 function mountedMessages() {
+
   let featchedArray = getMessages();
   for (let i = 0; i < featchedArray.length; i++) {
     let currentMessage = featchedArray[i];
@@ -121,8 +131,6 @@ function filledMessageData(id, content, fromId) {
   messageData.content = content;
   messageData.fromId = fromId;
 }
-
-
 
 function handlerDefaultMode() {
   if (message !== "") {
@@ -154,10 +162,22 @@ function handlerEditMode() {
   message = '';
   editTitle.style.display = 'none';
 }
+
+function deepCopyArray(array) {
+  let bundleCopyEntries = [];
+  array.forEach((element) => {
+    bundleCopyEntries.push(JSON.parse(JSON.stringify(element)));
+  });
+  return bundleCopyEntries;
+}
 // =====================================================================
 
 
 // ==========================   MOUNTED   ===============================
+mainArray = getMessages();
+// filteredArray = deepCopyArray(mainArray);
+
+
 document.addEventListener("mousemove", (event) => {
   screenX = event.pageX;
   screenY = event.pageY;
@@ -169,13 +189,14 @@ messageInput.addEventListener("input", (event) => {
 
 searchMessageInput.addEventListener("input", (event) => {
   messageForSearch = event.target.value;
-  if(inputMode === 'create'){
-  mountedMessages();
-} else if(inputMode === 'correct'){
-  // -------------------------??????????
-  presentMessages.style.display = 'none';
-  displaySearchingMessages();
-}
+  filterItems(messageForSearch, mainArray);
+    // if(inputMode === 'create'){
+    //   mountedMessages();
+    // } else if(inputMode === 'correct'){
+    //   // // -------------------------??????????
+    //   // presentMessages.style.display = 'none';
+    //   displaySearchingMessages();
+    // }
 });
 
   editBtn.addEventListener("click", () => {

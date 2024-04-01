@@ -36,6 +36,7 @@ function getMessages() {
 //     });
 //     localStorage.setItem('messages', JSON.stringify(fetchedMes));
 // }
+
 // 2-ой Способ
 function updateMessage(id, object) {
     let fetchedMes = getMessages();
