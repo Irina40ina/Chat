@@ -82,7 +82,7 @@ function setPositionContextMenu() {
   contextMenu.style.left = screenX + "px";
 }
 
-// ==============   НУЖНО РЕШИТЬ   ===================== 
+// ================   НУЖНО РЕШИТЬ   =====================
 function filterItems(word, array) {
   array.forEach(message => {
     const NotMathcingElement = document.getElementById(`${message.id}`);
