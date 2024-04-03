@@ -82,30 +82,21 @@ function setPositionContextMenu() {
   contextMenu.style.left = screenX + "px";
 }
 
-// ================   НУЖНО РЕШИТЬ   =====================
+// Функция которая фильтрует массив сообщений по поиску
 function filterItems(word, array) {
   array.forEach(message => {
-    const NotMathcingElement = document.getElementById(`${message.id}`);
-    if(NotMathcingElement){
-      NotMathcingElement.parentElement.remove();
-    };
-    if(message.content.toLowerCase().includes(word.toLowerCase())) {
-      filteredArray.push(message);
+    let filteredMessage = document.getElementById(`${message.id}`);
+    if(message.content.toLowerCase().includes(word.toLowerCase())){
+      if(!filteredMessage){
+        createMessageView(message.content, message.id);
+      }
+    } else {
+      if(filteredMessage){
+        filteredMessage.parentElement.remove();
+      }
     }
   });
-  filteredArray.forEach((message) => {
-    createMessageView(message.content, message.id);
-  });
 };
-
-function displaySearchingMessages() {
-  let searchingArray = filterItems(messageForSearch, mainArray);
-  for (let i = 0; i < searchingArray.length; i++) {
-    let searchingMassegesView = searchingArray[i];
-    createMessageView(searchingMassegesView.content, searchingMassegesView.id);
-  };
-};
-
 
 function mountedMessages() {
 
@@ -220,7 +211,7 @@ deleteBtn.addEventListener('click', () => {
 
 deleteBtnYes.addEventListener('click', () => {
   deleteMessage(messageId);
-  selectedMessage.remove();
+  selectedMessage.parentElement.remove();
   deleteWindow.style.display = 'none';
   messageInput.value = "";
   message = '';
